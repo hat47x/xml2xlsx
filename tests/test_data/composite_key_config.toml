@@ -1,0 +1,34 @@
+# xml2xlsx 変換設定（3階層複合キーテスト用）
+
+[mapping]
+
+[mapping.order]
+sheet_name = "注文"
+primary_keys = ["order_id"]
+
+[mapping.order.columns]
+order_id = "注文番号"
+customer_name = "顧客名"
+total_amount = "合計金額"
+
+[mapping.order_group]
+sheet_name = "注文グループ"
+primary_keys = ["order_id", "group_id"]
+
+[mapping.order_group.columns]
+order_id = "注文番号"
+group_id = "グループID"
+group_name = "グループ名"
+discount_rate = "割引率"
+
+[mapping.order_item]
+sheet_name = "注文明細"
+primary_keys = ["order_id", "group_id", "item_id"]
+
+[mapping.order_item.columns]
+order_id = "注文番号"
+group_id = "グループID"
+item_id = "商品ID"
+product_name = "商品名"
+quantity = "数量"
+unit_price = "単価"

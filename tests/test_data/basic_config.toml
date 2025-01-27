@@ -1,0 +1,24 @@
+# xml2xlsx 変換設定
+
+[mapping]
+
+[mapping.order]
+sheet_name = "注文"
+primary_keys = ["order_id"]
+
+[mapping.order.columns]
+order_id = "注文番号"
+order_date = "注文日"
+customer_name = "顧客名"
+total_amount = "合計金額"
+
+[mapping.order_item]
+sheet_name = "注文明細"
+primary_keys = ["item_id"]
+
+[mapping.order_item.columns]
+item_id = "明細番号"
+order_id = "注文番号"
+product_name = "商品名"
+quantity = "数量"
+unit_price = "単価"

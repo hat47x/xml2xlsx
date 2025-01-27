@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orders>
+    <order>
+        <order_id>ORD001</order_id>
+        <order_date>2024-01-23</order_date>
+        <customer_name>山田太郎</customer_name>
+        <total_amount>15000</total_amount>
+        <order_item>
+            <item_id>ITEM001</item_id>
+            <order_id>ORD001</order_id>
+            <product_name>商品A</product_name>
+            <quantity>2</quantity>
+            <unit_price>5000</unit_price>
+        </order_item>
+        <order_item>
+            <item_id>ITEM002</item_id>
+            <order_id>ORD001</order_id>
+            <product_name>商品B</product_name>
+            <quantity>1</quantity>
+            <unit_price>5000</unit_price>
+        </order_item>
+    </order>
+    <order>
+        <order_id>ORD002</order_id>
+        <order_date>2024-01-24</order_date>
+        <customer_name>鈴木花子</customer_name>
+        <total_amount>12000</total_amount>
+        <order_item>
+            <item_id>ITEM003</item_id>
+            <order_id>ORD002</order_id>
+            <product_name>商品C</product_name>
+            <quantity>3</quantity>
+            <unit_price>4000</unit_price>
+        </order_item>
+    </order>
+</orders>

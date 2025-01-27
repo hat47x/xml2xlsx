@@ -1,0 +1,13 @@
+# xml2xlsx 変換設定（CDATA対応）
+
+[mapping]
+
+[mapping.order]
+sheet_name = "注文"
+primary_keys = ["id"]
+
+[mapping.order.columns]
+id = "注文番号"
+customer_name = "顧客名"
+notes = "メモ"
+description = "説明"

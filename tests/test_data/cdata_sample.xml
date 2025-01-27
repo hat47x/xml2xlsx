@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <orders>
+        <order>
+            <id>ORD001</id>
+            <customer_name>テスト顧客</customer_name>
+            <notes><![CDATA[特別な記号を含むメモ: <>&"']]></notes>
+            <description><![CDATA[複数行の説明
+改行を含む内容
+タグのような文字列: <tag>値</tag>]]></description>
+        </order>
+        <order>
+            <id>ORD002</id>
+            <customer_name>テスト顧客2</customer_name>
+            <notes><![CDATA[HTML形式のメモ: <b>重要</b>]]></notes>
+            <description><![CDATA[SQL文を含む説明:
+SELECT * FROM orders WHERE id = 'ORD002']]></description>
+        </order>
+    </orders>
+</root>

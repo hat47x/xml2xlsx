@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <companies>
+        <company code="C001" type="corporation">
+            <id>COMP001</id>
+            <name>テスト株式会社</name>
+            <departments>
+                <department code="D001">
+                    <id>DEPT001</id>
+                    <name>研究開発部</name>
+                    <projects>
+                        <project status="active" priority="high">
+                            <id>PRJ001</id>
+                            <name>次世代AIプロジェクト</name>
+                            <start_date>2024-01-01</start_date>
+                            <end_date>2024-12-31</end_date>
+                            <tasks>
+                                <task status="in_progress" priority="high" assigned_to="EMP001">
+                                    <id>TASK001</id>
+                                    <name>要件定義</name>
+                                    <description>システム要件の定義と文書化</description>
+                                    <subtasks>
+                                        <subtask status="completed">
+                                            <id>STASK001</id>
+                                            <name>ヒアリング</name>
+                                            <description>顧客要件のヒアリング</description>
+                                            <work_logs>
+                                                <work_log type="meeting" approved_by="EMP002">
+                                                    <id>WL001</id>
+                                                    <date>2024-01-20</date>
+                                                    <hours>4</hours>
+                                                    <details>クライアントMTG</details>
+                                                </work_log>
+                                                <work_log type="documentation" approved_by="EMP002">
+                                                    <id>WL002</id>
+                                                    <date>2024-01-21</date>
+                                                    <hours>6</hours>
+                                                    <details>資料作成</details>
+                                                </work_log>
+                                            </work_logs>
+                                        </subtask>
+                                    </subtasks>
+                                </task>
+                            </tasks>
+                        </project>
+                    </projects>
+                    <employees>
+                        <employee type="regular" status="active">
+                            <id>EMP001</id>
+                            <name>山田太郎</name>
+                            <email>yamada@example.com</email>
+                            <phone>03-1234-5678</phone>
+                            <skills>
+                                <skill category="programming" certified="true">
+                                    <id>SKILL001</id>
+                                    <name>Python</name>
+                                    <level>5</level>
+                                </skill>
+                            </skills>
+                            <certifications>
+                                <certification issuer="IPA" status="valid">
+                                    <id>CERT001</id>
+                                    <name>応用情報技術者</name>
+                                    <acquired_date>2023-06-15</acquired_date>
+                                    <expiry_date>2028-06-14</expiry_date>
+                                </certification>
+                            </certifications>
+                            <attendance_records>
+                                <attendance_record status="approved" approved="true">
+                                    <id>ATT001</id>
+                                    <date>2024-01-20</date>
+                                    <check_in>09:00</check_in>
+                                    <check_out>18:00</check_out>
+                                </attendance_record>
+                            </attendance_records>
+                        </employee>
+                    </employees>
+                </department>
+            </departments>
+            <assets>
+                <asset category="IT" status="active">
+                    <id>ASSET001</id>
+                    <name>開発用サーバー</name>
+                    <purchase_date>2023-04-01</purchase_date>
+                    <location>東京本社サーバールーム</location>
+                    <maintenance_logs>
+                        <maintenance_log priority="high" performed_by="EMP001">
+                            <id>MLOG001</id>
+                            <date>2024-01-15</date>
+                            <type>定期点検</type>
+                            <details>OS更新、セキュリティパッチ適用</details>
+                        </maintenance_log>
+                    </maintenance_logs>
+                </asset>
+            </assets>
+        </company>
+    </companies>
+</root>

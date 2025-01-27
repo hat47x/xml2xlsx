@@ -1,0 +1,151 @@
+# 大規模データ用のTOML設定ファイル
+
+[mapping]
+
+[mapping.company]
+sheet_name = "会社マスタ"
+primary_keys = ["id"]
+
+[mapping.company.columns]
+id = "会社ID"
+name = "会社名"
+"@code" = "会社コード"
+"@type" = "会社区分"
+
+[mapping.department]
+sheet_name = "部門マスタ"
+primary_keys = ["id"]
+
+[mapping.department.columns]
+id = "部門ID"
+name = "部門名"
+"@code" = "部門コード"
+company.id = "所属会社ID"
+
+[mapping.project]
+sheet_name = "プロジェクト"
+primary_keys = ["id"]
+
+[mapping.project.columns]
+id = "プロジェクトID"
+name = "プロジェクト名"
+start_date = "開始日"
+end_date = "終了日"
+"@status" = "ステータス"
+"@priority" = "優先度"
+company.id = "所属会社ID"
+department.id = "所属部門ID"
+
+[mapping.task]
+sheet_name = "タスク"
+primary_keys = ["id"]
+
+[mapping.task.columns]
+id = "タスクID"
+name = "タスク名"
+description = "タスク説明"
+"@status" = "タスクステータス"
+"@priority" = "タスク優先度"
+"@assigned_to" = "担当者ID"
+project.id = "所属プロジェクトID"
+
+[mapping.subtask]
+sheet_name = "サブタスク"
+primary_keys = ["id"]
+
+[mapping.subtask.columns]
+id = "サブタスクID"
+name = "サブタスク名"
+description = "サブタスク説明"
+"@status" = "サブタスクステータス"
+task.id = "所属タスクID"
+
+[mapping.work_log]
+sheet_name = "作業ログ"
+primary_keys = ["id"]
+
+[mapping.work_log.columns]
+id = "作業ログID"
+date = "作業日"
+hours = "作業時間"
+details = "作業詳細"
+"@type" = "作業種類"
+"@approved_by" = "承認者ID"
+subtask.id = "所属サブタスクID"
+
+[mapping.employee]
+sheet_name = "社員マスタ"
+primary_keys = ["id"]
+
+[mapping.employee.columns]
+id = "社員ID"
+name = "社員名"
+email = "メールアドレス"
+phone = "電話番号"
+"@type" = "社員タイプ"
+"@status" = "社員ステータス"
+department.id = "所属部門ID"
+
+[mapping.skill]
+sheet_name = "スキル"
+primary_keys = ["id"]
+
+[mapping.skill.columns]
+id = "スキルID"
+name = "スキル名"
+level = "スキルレベル"
+"@category" = "スキルカテゴリ"
+"@certified" = "認定済み"
+employee.id = "所属社員ID"
+
+[mapping.certification]
+sheet_name = "資格"
+primary_keys = ["id"]
+
+[mapping.certification.columns]
+id = "資格ID"
+name = "資格名"
+acquired_date = "取得日"
+expiry_date = "有効期限"
+"@issuer" = "発行者"
+"@status" = "資格ステータス"
+employee.id = "所属社員ID"
+
+[mapping.attendance_record]
+sheet_name = "勤怠記録"
+primary_keys = ["id"]
+
+[mapping.attendance_record.columns]
+id = "勤怠記録ID"
+date = "勤怠日"
+check_in = "出勤時刻"
+check_out = "退勤時刻"
+"@status" = "勤怠ステータス"
+"@approved" = "承認済み"
+employee.id = "所属社員ID"
+
+[mapping.asset]
+sheet_name = "資産管理"
+primary_keys = ["id"]
+
+[mapping.asset.columns]
+id = "資産ID"
+name = "資産名"
+purchase_date = "購入日"
+location = "設置場所"
+"@category" = "資産カテゴリ"
+"@status" = "資産ステータス"
+company.id = "所属会社ID"
+
+[mapping.maintenance_log]
+sheet_name = "メンテナンス記録"
+primary_keys = ["id"]
+
+[mapping.maintenance_log.columns]
+id = "メンテナンスログID"
+date = "点検日"
+type = "メンテナンスタイプ"
+details = "メンテナンス詳細"
+"@priority" = "優先度"
+"@performed_by" = "実施者ID"
+asset.id = "所属資産ID"
