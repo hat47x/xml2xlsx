@@ -44,10 +44,10 @@ xml2xlsx/                   # プロジェクトルート
   # フォーマットの適用
   black src/
   ```
-- flake8: コードスタイルチェック
+- pflake8: コードスタイルチェック（pyproject.tomlで設定）
   ```bash
   # スタイルチェックの実行
-  flake8 src/
+  pflake8 src/
   ```
 - 型ヒント: 可読性向上のため推奨
 
@@ -125,6 +125,7 @@ xml2xlsx/                   # プロジェクトルート
 - コードフォーマットの確認
   ```bash
   black --check src/
+  pflake8 src/
   ```
 - 大規模データでの動作確認
   ```bash

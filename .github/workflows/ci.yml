@@ -43,4 +43,4 @@ jobs:
     - name: コードフォーマットチェック
       run: |
         black --check src/
-        flake8 src/
+        pflake8 src/
