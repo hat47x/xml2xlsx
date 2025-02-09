@@ -1,4 +1,4 @@
-# xml2xlsx
+xml2xlsx
 
 XMLファイルをXLSX形式に変換するPythonツールです。階層化されたXMLの要素からエンティティと項目を識別し、エンティティをExcelシート、項目を列にマッピングします。
 
@@ -43,16 +43,16 @@ pip install -e ".[dev]"
 基本的な使用方法：
 ```bash
 # 設定ファイルを使用する場合
-xml2xlsx -i input.xml -c config.toml -o output.xlsx
+xml2xlsx convert -i input.xml -c config.toml -o output.xlsx
 
-# 設定ファイルなしで自動変換（シンプルなXMLの場合）
-xml2xlsx -i input.xml -o output.xlsx
+# 設定ファイルの自動生成
+xml2xlsx generate -i input.xml -o config.toml
 ```
 
 オプション：
 - `-i, --input`: 入力XMLファイルのパス（未指定時は標準入力から読み込み）
 - `-c, --config`: TOML設定ファイルのパス（省略可）
-- `-o, --output`: 出力XLSXファイルのパス（未指定時は標準出力に出力）
+- `-o, --output`: 出力ファイルのパス（未指定時は標準出力に出力）
 - `-f, --force`: 既存の出力ファイルを上書き
 - `-q, --quiet`: 進捗メッセージを表示しない
 - `-v, --version`: バージョン情報を表示
@@ -60,27 +60,65 @@ xml2xlsx -i input.xml -o output.xlsx
 標準入出力を使用した例：
 ```bash
 # パイプラインでの使用
-cat input.xml | xml2xlsx -c config.toml > output.xlsx
+cat input.xml | xml2xlsx convert -c config.toml > output.xlsx
 
 # 入力ファイル指定、標準出力
-xml2xlsx -i input.xml -c config.toml > output.xlsx
+xml2xlsx convert -i input.xml -c config.toml > output.xlsx
 
 # 標準入力、出力ファイル指定
-cat input.xml | xml2xlsx -c config.toml -o output.xlsx
+cat input.xml | xml2xlsx convert -c config.toml -o output.xlsx
 ```
 
 注意：
 - 標準出力を使用する場合、進捗メッセージは標準エラー出力に出力されます
 - 大きなファイルを処理する場合はファイル指定を推奨です
+- シート名は31文字以内である必要があります（Excel仕様による制限）
+- 同一要素の重複は自動的に排除されます
+- エラーメッセージは日本語で出力されます
 
 ### 設定ファイル形式
 
 設定ファイル（TOML）には以下の項目を指定します：
 
-- `sheet_name`: Excelシート名（必須）
-- `primary_keys`: エンティティの一意キー（必須）
-- `parent_key`: 親エンティティとの関連キー（ルートエンティティの場合は省略可）
-- `column_order`: 取得する項目とその出力順序（省略可）
+```toml
+# 注文一覧のマッピング
+[mapping."root.orders.order"]
+sheet_name = "注文一覧"
+
+[mapping."root.orders.order".columns]
+"@id" = "注文ID"               # 属性の参照は@を付ける
+"order_date" = "注文日"        # 要素の参照は直接指定
+"customer.name" = "顧客名"     # 子要素は.で連結して参照
+
+# 注文詳細のマッピング（親要素の参照あり）
+[mapping."root.orders.order.items.item"]
+sheet_name = "注文詳細"
+
+[mapping."root.orders.order.items.item".columns]
+"@id" = "明細ID"
+"product_name" = "商品名"
+"quantity" = "数量"
+"order.@id" = "注文ID"         # 親要素の属性を参照
+"order.order_date" = "注文日"  # 親要素の要素を参照
+```
+
+親要素の情報参照：
+- `order.@id`: 親要素の属性を参照
+- `order.order_date`: 親要素の要素を参照
+- `order.customer.name`: 親要素の子要素を参照
+
+重要な制約事項：
+1. シート名の制限
+   - 最大31文字（Excel仕様）
+   - シート名の重複は不可
+
+2. データの重複
+   - 同一要素の重複は自動的に排除
+   - 親子関係は維持
+
+3. メモリ使用
+   - 大規模ファイル処理時はメモリ使用量に注意
+   - 必要に応じて分割処理を推奨
 
 詳細な設定例や XMLファイル例については、[基本設計書](docs/basic-design.md)を参照してください。
 
@@ -118,20 +156,9 @@ tox --recreate
 toxによるテスト実行では以下のチェックが行われます：
 
 1. コードフォーマット（black）
-   - srcとtestsディレクトリの全Pythonファイルをチェック
-   - フォーマットの不一致があればエラー
-
 2. コード品質チェック（pflake8）
-   - PEP 8スタイルガイドへの準拠
-   - 複雑度やコード行数の制限チェック
-
 3. 型チェック（mypy）
-   - 静的型チェックによるエラー検出
-   - 未定義の型や型の不一致を報告
-
 4. ユニットテスト（pytest）
-   - すべてのテストケースを実行
-   - カバレッジレポートを生成（xml2xlsxパッケージ）
 
 対応Pythonバージョン：
 - Python 3.10
@@ -139,61 +166,41 @@ toxによるテスト実行では以下のチェックが行われます：
 - Python 3.12
 - Python 3.13
 
-各バージョンで個別の仮想環境が作成され、依存パッケージのインストールからテストまでが独立して実行されます。
-
 テストの詳細な仕様については、[テスト仕様書](docs/test-specification.md)を参照してください。
-
-### Visual Studio Codeでの開発
-
-プロジェクトにはVSCode用の設定が含まれています：
-
-1. F5キーで直接デバッグ実行が可能
-2. テストの実行と結果の確認が容易
-3. 設定済みのデバッグ構成
-4. Mermaid図の表示機能
-
-#### 必須拡張機能
-
-設計書に含まれるMermaid図を表示するには、以下の拡張機能をインストールしてください：
-
-```bash
-code --install-extension bierner.markdown-mermaid
-```
-
-または、VS Code内で以下の手順で拡張機能をインストール：
-1. 拡張機能パネルを開く（Ctrl+Shift+X）
-2. 検索欄に「Markdown Preview Mermaid Support」と入力
-3. 「インストール」をクリック
 
 ## トラブルシューティング
 
 ### よくある問題
 
-1. インストールに失敗する場合：
-```bash
-# キャッシュを使わずに再インストール
-pip install --no-cache-dir -e .
+1. シート名に関するエラー：
+```
+エラー: シート名 'very_long_sheet_name_exceeding_limit' が31文字を超えています
+→ 設定ファイルで31文字以内のシート名を指定してください
 ```
 
-2. 依存関係の問題：
+2. メモリ使用量の問題：
+```
+エラー: メモリ不足が発生しました
+→ 入力ファイルを分割するか、より大きなメモリを確保してください
+```
+
+3. XMLファイルのエラー：
+```
+エラー: XMLファイルの解析に失敗しました
+→ XMLファイルの形式を確認してください
+```
+
+その他の一般的な問題：
 ```bash
-# 依存関係をクリーンアップして再インストール
+# インストールに失敗する場合
+pip install --no-cache-dir -e .
+
+# 依存関係の問題
 pip uninstall xml2xlsx
 pip install -e .
-```
 
-3. toxでのテストに失敗する場合：
-```bash
-# toxの環境をクリーンアップして再実行
+# toxでのテストに失敗する場合
 tox --recreate
-
-# 特定のPythonバージョンで失敗する場合
-# そのバージョンのみを対象に再実行
-tox -e py310 --recreate
-
-# テスト中にメモリエラーが発生する場合
-# 並列実行を無効化して再実行
-tox --recreate -p 0
 ```
 
 ## ライセンス

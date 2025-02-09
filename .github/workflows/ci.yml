@@ -24,23 +24,7 @@ jobs:
     - name: 依存関係のインストール
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[dev]
-        pip install psutil  # パフォーマンステスト用
-        pip install types-toml  # tomlパッケージの型定義
-    
-    - name: 型チェック
-      run: |
-        mypy src/xml2xlsx
-      
-    - name: テスト実行
-      run: |
-        pytest tests/ --verbose
-      
-    - name: パフォーマンステスト
-      run: |
-        pytest tests/test_performance.py -v --durations=0
-      
-    - name: コードフォーマットチェック
-      run: |
-        black --check src/
-        pflake8 src/
+        python -m pip install tox tox-gh-actions
+
+    - name: toxでテスト実行
+      run: tox

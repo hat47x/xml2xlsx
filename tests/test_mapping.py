@@ -1,37 +1,25 @@
-"""カラムマッピング処理のテストモジュール
+"""マッピング機能のテスト"""
 
-以下のマッピング機能をテストします：
-1. 基本的なカラムマッピング
-2. カラム順序の保持
-3. 複雑なマッピングパターン
-4. エラー処理
-"""
-
+from textwrap import dedent
 import pytest
-from xml2xlsx.converter import XmlToExcelConverter
 import pandas as pd
-from pathlib import Path
+from xml2xlsx.converter import XmlToExcelConverter
 
 
 def test_basic_column_mapping(tmp_path):
     """基本的なカラムマッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <department>
-            <id>D001</id>
-            <name>開発部</name>
-            <code>DEV</code>
-        </department>
-    </root>
+    xml_content = dedent(
+        """
+        <root>
+            <item>
+                <code>001</code>
+                <name>Item 1</name>
+            </item>
+        </root>
     """
+    )
 
-    config = {
-        "mapping": {
-            "department": {
-                "columns": {"id": "部門ID", "name": "部門名", "code": "部門コード"}
-            }
-        }
-    }
+    config = {"mapping": {"root.item": {"columns": {"code": "商品コード", "name": "商品名"}}}}
 
     xml_path = tmp_path / "test.xml"
     output_path = tmp_path / "output.xlsx"
@@ -43,74 +31,43 @@ def test_basic_column_mapping(tmp_path):
     converter.convert(str(xml_path), str(output_path))
 
     with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert list(df.columns) == ["部門ID", "部門名", "部門コード"]
-        assert df.iloc[0]["部門ID"] == "D001"
-        assert df.iloc[0]["部門名"] == "開発部"
-        assert df.iloc[0]["部門コード"] == "DEV"
-
-
-def test_column_order_preservation(tmp_path):
-    """カラム順序の保持機能をテスト"""
-    xml_content = """
-    <root>
-        <department>
-            <id>D001</id>
-            <name>開発部</name>
-            <code>DEV</code>
-        </department>
-    </root>
-    """
-
-    config = {
-        "mapping": {
-            "department": {
-                "columns": {
-                    "name": "部門名",  # 意図的に順序を変更
-                    "code": "部門コード",
-                    "id": "部門ID",
-                }
-            }
-        }
-    }
-
-    xml_path = tmp_path / "test.xml"
-    output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
-
-    converter = XmlToExcelConverter()
-    converter.config = config
-    converter.convert(str(xml_path), str(output_path))
-
-    with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert list(df.columns) == ["部門名", "部門コード", "部門ID"]
+        df = pd.read_excel(excel, "item", dtype=str)
+        assert list(df.columns) == ["商品コード", "商品名"]
+        assert df.iloc[0]["商品コード"] == "001"
+        assert df.iloc[0]["商品名"] == "Item 1"
 
 
 def test_nested_mapping(tmp_path):
-    """入れ子構造のマッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <company>
-            <id>C001</id>
-            <department>
-                <id>D001</id>
-                <name>開発部</name>
-            </department>
-        </company>
-    </root>
+    """ネストされた要素のマッピング機能をテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <order>
+                <header>
+                    <code>O001</code>
+                    <date>2024-01-01</date>
+                </header>
+                <details>
+                    <item>
+                        <code>001</code>
+                        <quantity>2</quantity>
+                    </item>
+                </details>
+            </order>
+        </root>
     """
+    )
 
     config = {
         "mapping": {
-            "department": {
-                "columns": {
-                    "id": "部門ID",
-                    "name": "部門名",
-                    "company.id": "所属会社ID",
-                }
-            }
+            "root.order.details.item": {
+                "sheet_name": "items",
+                "columns": {"code": "商品コード", "quantity": "数量"},
+            },
+            "root.order.header": {
+                "sheet_name": "headers",
+                "columns": {"code": "注文番号", "date": "注文日"},
+            },
         }
     }
 
@@ -124,41 +81,38 @@ def test_nested_mapping(tmp_path):
     converter.convert(str(xml_path), str(output_path))
 
     with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert "所属会社ID" in df.columns
-        assert df.iloc[0]["所属会社ID"] == "C001"
+        items_df = pd.read_excel(excel, "items", dtype=str)
+        assert list(items_df.columns) == ["商品コード", "数量"]
+        assert items_df.iloc[0]["商品コード"] == "001"
+
+        header_df = pd.read_excel(excel, "headers", dtype=str)
+        assert list(header_df.columns) == ["注文番号", "注文日"]
+        assert header_df.iloc[0]["注文番号"] == "O001"
 
 
-def test_multilevel_hierarchy_mapping(tmp_path):
-    """複数階層の親子関係マッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <organization>
-            <id>O001</id>
-            <name>組織1</name>
-            <company>
-                <id>C001</id>
-                <name>会社1</name>
-                <department>
-                    <id>D001</id>
-                    <name>開発部</name>
+def test_parent_reference_mapping(tmp_path):
+    """親要素への参照をマッピングするテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <organization name="Org1">
+                <department name="Dev1">
+                    <employee name="Emp1"/>
                 </department>
-            </company>
-        </organization>
-    </root>
+            </organization>
+        </root>
     """
+    )
 
     config = {
         "mapping": {
-            "department": {
+            "root.organization.department.employee": {
+                "sheet_name": "employees",
                 "columns": {
-                    "id": "部門ID",
-                    "name": "部門名",
-                    "company.id": "所属会社ID",
-                    "company.name": "所属会社名",
-                    "organization.id": "組織ID",
-                    "organization.name": "組織名",
-                }
+                    "@name": "社員名",
+                    "department.@name": "部門名",
+                    "organization.@name": "組織名",
+                },
             }
         }
     }
@@ -173,75 +127,34 @@ def test_multilevel_hierarchy_mapping(tmp_path):
     converter.convert(str(xml_path), str(output_path))
 
     with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert list(df.columns) == [
-            "部門ID",
-            "部門名",
-            "所属会社ID",
-            "所属会社名",
-            "組織ID",
-            "組織名",
-        ]
-        assert df.iloc[0]["部門ID"] == "D001"
-        assert df.iloc[0]["所属会社ID"] == "C001"
-        assert df.iloc[0]["組織ID"] == "O001"
-        assert df.iloc[0]["所属会社名"] == "会社1"
-        assert df.iloc[0]["組織名"] == "組織1"
-
-
-def test_partial_mapping(tmp_path):
-    """部分的なマッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <department>
-            <id>D001</id>
-            <name>開発部</name>
-            <code>DEV</code>
-            <location>東京</location>
-        </department>
-    </root>
-    """
-
-    config = {
-        "mapping": {"department": {"columns": {"id": "部門ID", "name": "部門名"}}}
-    }
-
-    xml_path = tmp_path / "test.xml"
-    output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
-
-    converter = XmlToExcelConverter()
-    converter.config = config
-    converter.convert(str(xml_path), str(output_path))
-
-    with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert list(df.columns) == ["部門ID", "部門名"]
-        assert "code" not in df.columns
-        assert "location" not in df.columns
+        df = pd.read_excel(excel, "employees", dtype=str)
+        assert list(df.columns) == ["社員名", "部門名", "組織名"]
+        assert df.iloc[0]["社員名"] == "Emp1"
+        assert df.iloc[0]["部門名"] == "Dev1"
+        assert df.iloc[0]["組織名"] == "Org1"
 
 
 def test_attribute_mapping(tmp_path):
     """属性のマッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <department code="DEV" type="development">
-            <id>D001</id>
-            <name>開発部</name>
-        </department>
-    </root>
+    xml_content = dedent(
+        """
+        <root>
+            <item code="001" type="normal">
+                <name>Item 1</name>
+            </item>
+        </root>
     """
+    )
 
     config = {
         "mapping": {
-            "department": {
+            "root.item": {
+                "sheet_name": "items",
                 "columns": {
-                    "id": "部門ID",
-                    "name": "部門名",
-                    "@code": "部門コード",
-                    "@type": "部門種別",
-                }
+                    "@code": "商品コード",
+                    "@type": "種別",
+                    "name": "商品名",
+                },
             }
         }
     }
@@ -256,44 +169,39 @@ def test_attribute_mapping(tmp_path):
     converter.convert(str(xml_path), str(output_path))
 
     with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert "部門コード" in df.columns
-        assert "部門種別" in df.columns
-        assert df.iloc[0]["部門コード"] == "DEV"
-        assert df.iloc[0]["部門種別"] == "development"
+        df = pd.read_excel(excel, "items", dtype=str)
+        assert list(df.columns) == ["商品コード", "種別", "商品名"]
+        assert df.iloc[0]["商品コード"] == "001"
+        assert df.iloc[0]["種別"] == "normal"
+        assert df.iloc[0]["商品名"] == "Item 1"
 
 
-def test_sibling_reference_mapping(tmp_path):
-    """兄弟要素間の参照マッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <company>
-            <id>C001</id>
-            <departments>
-                <department>
-                    <id>D001</id>
-                    <name>開発部</name>
-                    <manager_id>E001</manager_id>
+def test_multiple_parent_references(tmp_path):
+    """複数の親要素への参照をテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <company code="C001">
+                <department code="D001">
+                    <project code="P001">
+                        <task name="Task1"/>
+                    </project>
                 </department>
-                <employee>
-                    <id>E001</id>
-                    <name>山田太郎</name>
-                    <department_id>D001</department_id>
-                </employee>
-            </departments>
-        </company>
-    </root>
+            </company>
+        </root>
     """
+    )
 
     config = {
         "mapping": {
-            "department": {
+            "root.company.department.project.task": {
+                "sheet_name": "tasks",
                 "columns": {
-                    "id": "部門ID",
-                    "name": "部門名",
-                    "manager_id": "部門長ID",
-                    "employee.name": "部門長名",
-                }
+                    "@name": "タスク名",
+                    "project.@code": "プロジェクトコード",
+                    "department.@code": "部門コード",
+                    "company.@code": "会社コード",
+                },
             }
         }
     }
@@ -308,6 +216,53 @@ def test_sibling_reference_mapping(tmp_path):
     converter.convert(str(xml_path), str(output_path))
 
     with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "department")
-        assert list(df.columns) == ["部門ID", "部門名", "部門長ID", "部門長名"]
-        assert df.iloc[0]["部門長名"] == "山田太郎"
+        df = pd.read_excel(excel, "tasks", dtype=str)
+        assert list(df.columns) == [
+            "タスク名",
+            "プロジェクトコード",
+            "部門コード",
+            "会社コード",
+        ]
+        assert df.iloc[0]["タスク名"] == "Task1"
+        assert df.iloc[0]["プロジェクトコード"] == "P001"
+        assert df.iloc[0]["部門コード"] == "D001"
+        assert df.iloc[0]["会社コード"] == "C001"
+
+
+def test_custom_sheet_names(tmp_path):
+    """カスタムシート名の設定をテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <item>
+                <code>001</code>
+                <name>Item 1</name>
+            </item>
+        </root>
+    """
+    )
+
+    config = {
+        "mapping": {
+            "root.item": {
+                "sheet_name": "商品マスタ",
+                "columns": {"code": "商品コード", "name": "商品名"},
+            }
+        }
+    }
+
+    xml_path = tmp_path / "test.xml"
+    output_path = tmp_path / "output.xlsx"
+    with open(xml_path, "w", encoding="utf-8") as f:
+        f.write(xml_content)
+
+    converter = XmlToExcelConverter()
+    converter.config = config
+    converter.convert(str(xml_path), str(output_path))
+
+    with pd.ExcelFile(output_path) as excel:
+        assert "商品マスタ" in excel.sheet_names
+        df = pd.read_excel(excel, "商品マスタ", dtype=str)
+        assert list(df.columns) == ["商品コード", "商品名"]
+        assert df.iloc[0]["商品コード"] == "001"
+        assert df.iloc[0]["商品名"] == "Item 1"

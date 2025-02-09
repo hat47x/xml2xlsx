@@ -1,288 +1,213 @@
-"""CLIインターフェースのテスト。"""
+"""CLIモジュールのテスト"""
 
+from textwrap import dedent
 import pytest
-from pathlib import Path
-
+from xml2xlsx.cli import main
 from xml2xlsx import __version__
-from xml2xlsx.cli import main, create_parser, validate_args
 
 
-@pytest.fixture
-def test_data_dir() -> Path:
-    """テストデータディレクトリのパスを返す。"""
-    return Path(__file__).parent / "test_data"
-
-
-def test_parser_required_args():
-    """必須引数のパース処理をテスト。"""
-    parser = create_parser()
-    # ショートオプション
-    args = parser.parse_args(
-        ["-i", "input.xml", "-c", "config.toml", "-o", "output.xlsx"]
-    )
-    assert args.input == "input.xml"
-    assert args.config == "config.toml"
-    assert args.output == "output.xlsx"
-    assert not args.force
-    assert not args.quiet
-
-    # ロングオプション
-    args = parser.parse_args(
-        ["--input", "input.xml", "--config", "config.toml", "--output", "output.xlsx"]
-    )
-    assert args.input == "input.xml"
-    assert args.config == "config.toml"
-    assert args.output == "output.xlsx"
-
-
-def test_parser_missing_required_args():
-    """必須引数が不足している場合のテスト。"""
-    parser = create_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args(["-i", "input.xml"])  # configとoutputが不足
-    with pytest.raises(SystemExit):
-        parser.parse_args(
-            ["--input", "input.xml", "--output", "output.xlsx"]
-        )  # configが不足
-
-
-def test_parser_optional_args():
-    """オプション引数の組み合わせをテスト。"""
-    parser = create_parser()
-    # forceオプション（ショート）
-    args = parser.parse_args(
-        ["-i", "input.xml", "-c", "config.toml", "-o", "output.xlsx", "-f"]
-    )
-    assert args.force
-
-    # forceオプション（ロング）
-    args = parser.parse_args(
-        [
-            "--input",
-            "input.xml",
-            "--config",
-            "config.toml",
-            "--output",
-            "output.xlsx",
-            "--force",
-        ]
-    )
-    assert args.force
-
-    # quietオプション
-    args = parser.parse_args(
-        [
-            "--input",
-            "input.xml",
-            "--config",
-            "config.toml",
-            "--output",
-            "output.xlsx",
-            "--quiet",
-        ]
-    )
-    assert args.quiet
-
-    # 全オプション
-    args = parser.parse_args(
-        [
-            "--input",
-            "input.xml",
-            "--config",
-            "config.toml",
-            "--output",
-            "output.xlsx",
-            "--force",
-            "--quiet",
-        ]
-    )
-    assert args.force
-    assert args.quiet
-
-
-def test_parser_version(capsys):
-    """バージョン情報の出力をテスト。"""
-    parser = create_parser()
-    # ショートオプション
-    with pytest.raises(SystemExit) as excinfo:
-        parser.parse_args(["-v"])
-    assert excinfo.value.code == 0
+def test_help_command(capsys):
+    """ヘルプコマンドのテスト"""
+    with pytest.raises(SystemExit) as e:
+        main(["--help"])
+    assert e.value.code == 0
     captured = capsys.readouterr()
-    assert __version__ in captured.out
+    assert "利用可能なコマンド" in captured.out
+    assert "convert" in captured.out
+    assert "generate" in captured.out
 
-    # ロングオプション
-    with pytest.raises(SystemExit) as excinfo:
-        parser.parse_args(["--version"])
-    assert excinfo.value.code == 0
+
+def test_version_command(capsys):
+    """バージョン表示のテスト"""
+    with pytest.raises(SystemExit) as e:
+        main(["--version"])
+    assert e.value.code == 0
     captured = capsys.readouterr()
     assert __version__ in captured.out
 
 
-def test_parser_help(capsys):
-    """ヘルプメッセージの出力をテスト。"""
-    parser = create_parser()
-    # ショートオプション
-    with pytest.raises(SystemExit) as excinfo:
-        parser.parse_args(["-h"])
-    assert excinfo.value.code == 0
+def test_missing_command(capsys):
+    """コマンドが指定されていない場合のテスト"""
+    with pytest.raises(SystemExit) as e:
+        main([])
+    assert e.value.code == 2
     captured = capsys.readouterr()
-    help_out = captured.out
-    assert "usage:" in help_out
-    assert "--input" in help_out
-    assert "--config" in help_out
-    assert "--output" in help_out
-    assert "--force" in help_out
-    assert "--quiet" in help_out
+    assert "コマンドが指定されていません" in captured.err
 
-    # ロングオプション
-    with pytest.raises(SystemExit) as excinfo:
-        parser.parse_args(["--help"])
-    assert excinfo.value.code == 0
+
+def test_convert_missing_args(capsys):
+    """convert コマンドの必須引数漏れのテスト"""
+    with pytest.raises(SystemExit) as e:
+        main(["convert"])
+    assert e.value.code == 2
     captured = capsys.readouterr()
-    assert captured.out == help_out  # 同じヘルプメッセージ
+    assert "--input" in captured.err
 
 
-def test_validate_args_missing_input(tmp_path):
-    """存在しない入力ファイルの検証をテスト。"""
-    args = create_parser().parse_args(
-        [
-            "--input",
-            "nonexistent.xml",
-            "--config",
-            "config.toml",
-            "--output",
-            "output.xlsx",
-        ]
+def test_generate_missing_args(capsys):
+    """generate コマンドの必須引数漏れのテスト"""
+    with pytest.raises(SystemExit) as e:
+        main(["generate"])
+    assert e.value.code == 2
+    captured = capsys.readouterr()
+    assert "--input" in captured.err
+
+
+def test_convert_with_missing_files(tmp_path):
+    """存在しないファイルを指定した場合のテスト"""
+    input_file = tmp_path / "not_exists.xml"
+    config_file = tmp_path / "not_exists.toml"
+    output_file = tmp_path / "output.xlsx"
+
+    result = main(["convert", "-i", str(input_file), "-c", str(config_file), "-o", str(output_file)])
+    assert result == 1
+
+
+def test_convert_xml_to_excel(tmp_path, capsys):
+    """XMLからExcelへの変換テスト"""
+    xml_content = dedent(
+        """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <orders>
+            <order id="1">
+                <order_date>2024-02-01</order_date>
+                <customer_name>山田太郎</customer_name>
+                <total_amount>10000</total_amount>
+                <order_items>
+                    <order_item>
+                        <product_name>商品A</product_name>
+                        <quantity>2</quantity>
+                        <unit_price>1000</unit_price>
+                    </order_item>
+                    <order_item>
+                        <product_name>商品B</product_name>
+                        <quantity>1</quantity>
+                        <unit_price>8000</unit_price>
+                    </order_item>
+                </order_items>
+            </order>
+        </orders>
+        """
+    ).lstrip()
+
+    config_content = dedent(
+        """
+        [mapping."orders.order"]
+        sheet_name = "注文一覧"
+
+        [mapping."orders.order".columns]
+        "@id" = "注文番号"
+        "order_date" = "注文日"
+        "customer_name" = "顧客名"
+        "total_amount" = "合計金額"
+
+        [mapping."orders.order.order_items.order_item"]
+        sheet_name = "注文明細"
+
+        [mapping."orders.order.order_items.order_item".columns]
+        "product_name" = "商品名"
+        "quantity" = "数量"
+        "unit_price" = "単価"
+        "order.@id" = "注文番号"
+    """
     )
-    error = validate_args(args)
-    assert error is not None
-    assert "入力XMLファイル" in error
-    assert "見つかりません" in error
 
-
-def test_validate_args_missing_config(test_data_dir, tmp_path):
-    """存在しない設定ファイルの検証をテスト。"""
-    args = create_parser().parse_args(
-        [
-            "--input",
-            str(test_data_dir / "basic_sample.xml"),
-            "--config",
-            "nonexistent.toml",
-            "--output",
-            "output.xlsx",
-        ]
-    )
-    error = validate_args(args)
-    assert error is not None
-    assert "設定ファイル" in error
-    assert "見つかりません" in error
-
-
-def test_validate_args_existing_output(test_data_dir, tmp_path):
-    """既存の出力ファイルの検証をテスト。"""
-    # 出力ファイルを作成
-    output_path = tmp_path / "existing.xlsx"
-    output_path.touch()
-
-    args = create_parser().parse_args(
-        [
-            "--input",
-            str(test_data_dir / "basic_sample.xml"),
-            "--config",
-            str(test_data_dir / "basic_config.toml"),
-            "--output",
-            str(output_path),
-        ]
-    )
-    error = validate_args(args)
-    assert error is not None
-    assert "既に存在します" in error
-    assert "--force" in error
-
-
-def test_validate_args_force_overwrite(test_data_dir, tmp_path):
-    """--forceオプションでの上書き検証をテスト。"""
-    # 出力ファイルを作成
-    output_path = tmp_path / "existing.xlsx"
-    output_path.touch()
-
-    args = create_parser().parse_args(
-        [
-            "--input",
-            str(test_data_dir / "basic_sample.xml"),
-            "--config",
-            str(test_data_dir / "basic_config.toml"),
-            "--output",
-            str(output_path),
-            "--force",
-        ]
-    )
-    error = validate_args(args)
-    assert error is None
-
-
-def test_main_successful_execution(test_data_dir: Path, tmp_path: Path, capsys):
-    """正常系の実行をテスト。"""
-    xml_path = test_data_dir / "basic_sample.xml"
-    config_path = test_data_dir / "basic_config.toml"
+    xml_path = tmp_path / "test.xml"
+    config_path = tmp_path / "config.toml"
     output_path = tmp_path / "output.xlsx"
 
-    # 通常実行
-    result = main(
-        [
-            "--input",
-            str(xml_path),
-            "--config",
-            str(config_path),
-            "--output",
-            str(output_path),
-        ]
-    )
+    xml_path.write_text(xml_content)
+    config_path.write_text(config_content)
+
+    result = main(["convert", "-i", str(xml_path), "-c", str(config_path), "-o", str(output_path)])
     assert result == 0
     assert output_path.exists()
     captured = capsys.readouterr()
-    assert str(xml_path) in (captured.out + captured.err)
-    assert str(output_path) in (captured.out + captured.err)
-
-    # quietオプション付きの実行
-    output_path.unlink()  # 前の出力を削除
-    result = main(
-        [
-            "--input",
-            str(xml_path),
-            "--config",
-            str(config_path),
-            "--output",
-            str(output_path),
-            "--quiet",
-        ]
-    )
-    assert result == 0
-    assert output_path.exists()
-    captured = capsys.readouterr()
-    assert not captured.out  # 出力メッセージなし
+    assert "変換が完了しました" in captured.err
 
 
-def test_main_error_handling(capsys, tmp_path):
-    """エラー処理のテスト。"""
-    # 不正なXMLファイル
+def test_convert_with_invalid_xml(tmp_path, capsys):
+    """不正なXMLファイルの処理テスト"""
     invalid_xml = tmp_path / "invalid.xml"
-    invalid_xml.write_text("This is not XML")
+    config_file = tmp_path / "config.toml"
+    output_file = tmp_path / "output.xlsx"
 
-    result = main(
-        [
-            "--input",
-            str(invalid_xml),
-            "--config",
-            "config.toml",
-            "--output",
-            "output.xlsx",
-        ]
+    invalid_xml.write_text("This is not XML")
+    config_content = dedent(
+        """
+        [mapping."root"]
+        sheet_name = "test"
+
+        [mapping."root".columns]
+        text = "テキスト"
+    """
     )
+    config_file.write_text(config_content)
+
+    result = main(["convert", "-i", str(invalid_xml), "-c", str(config_file), "-o", str(output_file)])
     assert result == 1
     captured = capsys.readouterr()
     assert "エラー" in captured.err
 
 
-if __name__ == "__main__":
-    pytest.main([__file__])
+def test_invalid_sheet_name_error(tmp_path, capsys):
+    """シート名エラーのテスト"""
+    xml_content = dedent(
+        """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <root>
+            <data>
+                <text>テストデータ</text>
+            </data>
+        </root>
+        """
+    ).lstrip()
+    xml_path = tmp_path / "test.xml"
+    xml_path.write_text(xml_content)
+
+    # 31文字超過のテスト
+    config_content = dedent(
+        """
+        [mapping."root.data"]
+        sheet_name = "this_is_a_very_long_sheet_name_that_exceeds_31_characters"
+
+        [mapping."root.data".columns]
+        text = "テキスト"
+    """
+    )
+    config_path = tmp_path / "config1.toml"
+    config_path.write_text(config_content)
+    result = main(["convert", "-i", str(xml_path), "-c", str(config_path), "-o", str(tmp_path / "out1.xlsx")])
+    assert result == 1
+    captured = capsys.readouterr()
+    assert "31文字制限を超えています" in captured.err
+
+
+def test_japanese_error_messages(tmp_path, capsys):
+    """日本語エラーメッセージのテスト"""
+    # 1. 存在しないファイル
+    result = main(["convert", "-i", "存在しない.xml", "-c", str(tmp_path / "config.toml"), "-o", "出力.xlsx"])
+    assert result == 1
+    captured = capsys.readouterr()
+    assert "見つかりません" in captured.err
+
+    # 2. 不正なXML
+    xml_path = tmp_path / "invalid.xml"
+    config_path = tmp_path / "config.toml"
+    xml_path.write_text("不正なXML")
+
+    config_content = dedent(
+        """
+        [mapping."root"]
+        sheet_name = "テスト"
+
+        [mapping."root".columns]
+        "#text" = "データ"
+    """
+    )
+    config_path.write_text(config_content)
+
+    result = main(["convert", "-i", str(xml_path), "-c", str(config_path), "-o", str(tmp_path / "output.xlsx")])
+    assert result == 1
+    captured = capsys.readouterr()
+    assert "エラー" in captured.err

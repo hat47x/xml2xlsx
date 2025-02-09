@@ -1,5 +1,4 @@
-# 生成されたファイル
-*.xlsx
+xlsx
 output.*
 
 # Python
@@ -24,6 +23,10 @@ wheels/
 .installed.cfg
 *.egg
 .tox/
+
+# Documentation
+docs/_build/
+dev-docs/_build/
 
 # VSCode
 .vscode/*
