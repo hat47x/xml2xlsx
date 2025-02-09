@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xml2xlsx"
-version = "0.1.0"
-description = "Convert XML files to XLSX with entity relationship support"
+version = "0.2.0"
+description = "Convert XML files to XLSX"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -21,19 +21,26 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Text Processing :: Markup :: XML",
-    "Topic :: Office/Business",
+    "Topic :: Office/Business"
 ]
 dependencies = ["pandas>=1.5.0", "openpyxl>=3.0.0", "toml>=0.10.0"]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
     "pyproject-flake8>=6.0.0",
     "black>=22.0.0",
     "mypy>=1.0.0",
     "pandas-stubs>=2.0.0",
     "psutil>=5.8.0",
     "tox>=4.0.0",
+    "types-toml>=0.10.0",
+    # ドキュメント生成関連
+    "sphinx>=7.0.0",
+    "myst-parser>=2.0.0",
+    "sphinx-rtd-theme>=2.0.0",
+    "sphinxcontrib-mermaid>=0.9.0"
 ]
 
 [project.scripts]
@@ -63,9 +70,35 @@ module = ["pandas.*"]
 ignore_missing_imports = true
 
 [tool.flake8]
-max-line-length = 88
-extend-ignore = "E203"
-per-file-ignores = ["__init__.py:F401", "test_*.py:F401"]
+max-line-length = 120
+extend-ignore = ["E203", "W503"]
+per-file-ignores = [
+    "__init__.py:F401",
+    "test_*.py:F401,F811",
+    "conftest.py:F401"
+]
 
 [tool.pytest.ini_options]
 markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''/(\.eggs|\.git|\.hg|\.mypy_cache|\.nox|\.tox|\.venv|_build|buck-out|build|dist)/'''
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py310, py311, py312, py313
+isolated_build = True
+
+[testenv]
+extras =
+    dev
+commands =
+    black --check src tests
+    pflake8 src tests
+    mypy src
+    pytest --cov=xml2xlsx {posargs:tests}
+"""

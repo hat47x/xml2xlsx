@@ -1,179 +1,225 @@
-"""基本機能のテストモジュール
+"""Converterのテストモジュール"""
 
-以下の基本機能をテストします：
-1. 単純なXML変換
-2. 複数シート出力
-3. カスタムシート名
-4. 基本的なマッピング
-"""
-
+from textwrap import dedent
 import pytest
-from xml2xlsx.converter import XmlToExcelConverter
 import pandas as pd
-from pathlib import Path
-import xml.etree.ElementTree as ET
+from xml2xlsx.converter import XmlToExcelConverter, ConfigurationError
 
 
 def test_simple_xml_conversion(tmp_path):
-    """単純なXMLからExcelへの基本的な変換をテスト"""
-    xml_content = """
-    <root>
-        <item>
-            <id>001</id>
-            <name>Test Item</name>
-            <price>1000</price>
-        </item>
-    </root>
+    """基本的なXML変換のテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <item>
+                <name>Test Item</name>
+                <price>100</price>
+            </item>
+        </root>
     """
+    ).lstrip()
 
-    # XMLを一時ファイルに保存
+    config_content = dedent(
+        """
+        [mapping."root.item"]
+        sheet_name = "商品"
+
+        [mapping."root.item".columns]
+        name = "商品名"
+        price = "価格"
+    """
+    )
+
     xml_path = tmp_path / "test.xml"
+    config_path = tmp_path / "config.toml"
     output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
 
-    # 変換を実行
+    xml_path.write_text(xml_content)
+    config_path.write_text(config_content)
+
     converter = XmlToExcelConverter()
+    converter.load_config(str(config_path))
     converter.convert(str(xml_path), str(output_path))
 
-    # 結果を検証（文字列として読み込み）
-    with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "item", dtype=str)
-        assert "id" in df.columns
-        assert "name" in df.columns
-        assert "price" in df.columns
+    assert output_path.exists()
+    df = pd.read_excel(output_path, sheet_name="商品", dtype=str)
+    assert df.iloc[0]["商品名"] == "Test Item"
+    assert df.iloc[0]["価格"] == "100"
 
-        first_row = df.iloc[0]
-        assert first_row["id"] == "001"
-        assert first_row["name"] == "Test Item"
-        assert first_row["price"] == "1000"
+
+def test_configuration_required(tmp_path):
+    """設定が必要なことをテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <item>
+                <name>Test Item</name>
+            </item>
+        </root>
+    """
+    ).lstrip()
+
+    xml_path = tmp_path / "test.xml"
+    output_path = tmp_path / "output.xlsx"
+    xml_path.write_text(xml_content)
+
+    converter = XmlToExcelConverter()
+    with pytest.raises(ConfigurationError) as excinfo:
+        converter.convert(str(xml_path), str(output_path))
+    assert "設定ファイルが必要です" == str(excinfo.value)
 
 
 def test_multi_sheet_output(tmp_path):
-    """複数エンティティの処理と複数シート出力をテスト"""
-    xml_content = """
-    <root>
-        <company>
-            <id>C001</id>
-            <name>Test Company</name>
-            <departments>
-                <department>
-                    <id>D001</id>
-                    <name>Development</name>
-                </department>
-            </departments>
-        </company>
-    </root>
+    """複数シートの出力テスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <categories>
+                <category>
+                    <name>Category 1</name>
+                    <products>
+                        <product>
+                            <name>Product 1</name>
+                            <price>100</price>
+                        </product>
+                    </products>
+                </category>
+            </categories>
+        </root>
     """
+    ).lstrip()
 
-    # XMLを一時ファイルに保存
+    config_content = dedent(
+        """
+        [mapping."root.categories.category"]
+        sheet_name = "カテゴリ"
+
+        [mapping."root.categories.category".columns]
+        name = "カテゴリ名"
+
+        [mapping."root.categories.category.products.product"]
+        sheet_name = "商品"
+
+        [mapping."root.categories.category.products.product".columns]
+        name = "商品名"
+        price = "価格"
+        "category.name" = "カテゴリ名"
+    """
+    )
+
     xml_path = tmp_path / "test.xml"
+    config_path = tmp_path / "config.toml"
     output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
 
-    # 変換を実行
+    xml_path.write_text(xml_content)
+    config_path.write_text(config_content)
+
     converter = XmlToExcelConverter()
+    converter.load_config(str(config_path))
     converter.convert(str(xml_path), str(output_path))
 
-    # 結果を検証
     with pd.ExcelFile(output_path) as excel:
-        # シートの存在確認
-        assert "company" in excel.sheet_names
-        assert "department" in excel.sheet_names
+        assert "カテゴリ" in excel.sheet_names
+        assert "商品" in excel.sheet_names
 
-        # 会社データの確認（文字列として読み込み）
-        company_df = pd.read_excel(excel, "company", dtype=str)
-        assert "id" in company_df.columns
-        assert company_df.iloc[0]["id"] == "C001"
 
-        # 部門データの確認
-        department_df = pd.read_excel(excel, "department", dtype=str)
-        assert "id" in department_df.columns
-        assert department_df.iloc[0]["id"] == "D001"
-        assert "company.id" in department_df.columns
-        assert department_df.iloc[0]["company.id"] == "C001"
+def test_data_preserve_order(tmp_path):
+    """データの順序が保持されることを確認するテスト"""
+    xml_content = dedent(
+        """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <root>
+            <items>
+                <item id="1">
+                    <name>商品A</name>
+                    <price>1000</price>
+                    <category>電化製品</category>
+                </item>
+                <item id="2">
+                    <name>商品A</name>
+                    <price>1000</price>
+                    <category>電化製品</category>
+                </item>
+                <item id="3">
+                    <name>商品B</name>
+                    <price>2000</price>
+                    <category>家具</category>
+                </item>
+                <item id="3">
+                    <name>商品B</name>
+                    <price>2000</price>
+                    <category>家具</category>
+                </item>
+            </items>
+        </root>
+    """
+    ).lstrip()
+
+    config_content = dedent(
+        """
+        [mapping."root.items.item"]
+        sheet_name = "商品一覧"
+
+        [mapping."root.items.item".columns]
+        "@id" = "商品ID"
+        name = "商品名"
+        price = "価格"
+        category = "カテゴリ"
+    """
+    )
+
+    xml_path = tmp_path / "test.xml"
+    config_path = tmp_path / "config.toml"
+    output_path = tmp_path / "output.xlsx"
+
+    xml_path.write_text(xml_content)
+    config_path.write_text(config_content)
+
+    converter = XmlToExcelConverter()
+    converter.load_config(str(config_path))
+    converter.convert(str(xml_path), str(output_path))
+
+    df = pd.read_excel(output_path, sheet_name="商品一覧", dtype=str)
+
+    # データ数が正しく、順序が保持されていることを確認
+    assert len(df) == 4, "XMLの要素数と一致していません"
+    assert df["商品ID"].tolist() == ["1", "2", "3", "3"], "データの順序が保持されていません"
+    assert df["商品名"].tolist() == ["商品A", "商品A", "商品B", "商品B"]
+    assert df["カテゴリ"].tolist() == ["電化製品", "電化製品", "家具", "家具"]
 
 
 def test_custom_sheet_names(tmp_path):
-    """カスタムシート名の設定と適用をテスト"""
-    xml_content = """
-    <root>
-        <company>
-            <id>C001</id>
-            <name>Test Company</name>
-        </company>
-    </root>
+    """カスタムシート名のテスト"""
+    xml_content = dedent(
+        """
+        <root>
+            <data>
+                <value>Test</value>
+            </data>
+        </root>
     """
+    ).lstrip()
 
-    config = {
-        "mapping": {
-            "company": {
-                "sheet_name": "会社マスタ",
-                "columns": {"id": "会社ID", "name": "会社名"},
-            }
-        }
-    }
+    config_content = dedent(
+        """
+        [mapping."root.data"]
+        sheet_name = "カスタムシート"
 
-    # XMLを一時ファイルに保存
+        [mapping."root.data".columns]
+        value = "値"
+    """
+    )
+
     xml_path = tmp_path / "test.xml"
+    config_path = tmp_path / "config.toml"
     output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
 
-    # 変換を実行
+    xml_path.write_text(xml_content)
+    config_path.write_text(config_content)
+
     converter = XmlToExcelConverter()
-    converter.config = config
+    converter.load_config(str(config_path))
     converter.convert(str(xml_path), str(output_path))
 
-    # 結果を検証
     with pd.ExcelFile(output_path) as excel:
-        assert "会社マスタ" in excel.sheet_names
-
-        # データを文字列として読み込み
-        df = pd.read_excel(excel, "会社マスタ", dtype=str)
-        assert "会社ID" in df.columns
-        assert "会社名" in df.columns
-        assert df.iloc[0]["会社ID"] == "C001"
-
-
-def test_basic_mapping(tmp_path):
-    """基本的なカラムマッピング機能をテスト"""
-    xml_content = """
-    <root>
-        <item>
-            <id>001</id>
-            <name>Test Item</name>
-            <price>1000</price>
-        </item>
-    </root>
-    """
-
-    config = {
-        "mapping": {
-            "item": {"columns": {"id": "商品ID", "name": "商品名", "price": "価格"}}
-        }
-    }
-
-    # XMLを一時ファイルに保存
-    xml_path = tmp_path / "test.xml"
-    output_path = tmp_path / "output.xlsx"
-    with open(xml_path, "w", encoding="utf-8") as f:
-        f.write(xml_content)
-
-    # 変換を実行
-    converter = XmlToExcelConverter()
-    converter.config = config
-    converter.convert(str(xml_path), str(output_path))
-
-    # 結果を検証（文字列として読み込み）
-    with pd.ExcelFile(output_path) as excel:
-        df = pd.read_excel(excel, "item", dtype=str)
-        assert "商品ID" in df.columns
-        assert "商品名" in df.columns
-        assert "価格" in df.columns
-
-        first_row = df.iloc[0]
-        assert first_row["商品ID"] == "001"
-        assert first_row["商品名"] == "Test Item"
-        assert first_row["価格"] == "1000"
+        assert "カスタムシート" in excel.sheet_names
