@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>アーキテクチャ決定記録（ADR） &mdash; xml2xlsx Developer Documentation 0.2.0 ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=0a962762"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=4755f45a"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="1. ADR 001: XML変換の基本設計原則" href="adr-001-xml-conversion-design-principles.html" />
+    <link rel="prev" title="1. テスト戦略" href="../guides/test-specification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            xml2xlsx Developer Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">アーキテクチャ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">アーキテクチャ概要</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id2">システム構成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id3">主要コンポーネント</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#xml">1. XMLパーサー</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#id4">2. データ変換</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#id5">3. データフレーム処理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#excel">4. Excel出力</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id6">技術仕様</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/basic-design.html">基本設計</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id2">システム概要</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id3">システムアーキテクチャ</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id4">主要コンポーネント</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id5">基本的な処理フロー</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id6">設定ファイルの構造</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id7">エラー処理方針</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/basic-design.html#id8">拡張性の考慮</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/detailed-design.html">1. モジュール構成</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id2">1.1 コンバーターモジュール</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id3">1.2 エンティティモジュール</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#cli">1.3 CLIモジュール</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/detailed-design.html#id4">2. データ処理フロー</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#xml">2.1 XML解析フロー</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id5">2.2 データ変換フロー</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id6">2.3 出力生成フロー</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/detailed-design.html#id7">3. エラー処理フロー</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id8">3.1 エラー検知</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id9">3.2 エラー処理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/detailed-design.html#id10">4. リソース管理</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id11">4.1 メモリ管理戦略</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/detailed-design.html#id12">5. パフォーマンス制御</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id13">5.1 処理の最適化</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/detailed-design.html#id14">5.2 監視と制御</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/technical-specification.html">技術仕様</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id2">システムアーキテクチャ</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id3">データフロー</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id4">制約事項</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id5">メモリ使用量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id6">パフォーマンス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id7">エラー処理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../architecture/technical-specification.html#id10">ログ出力</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id7">設計原則</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#id8">1. シンプルさ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#id9">2. 堅牢性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html#id10">3. 拡張性</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id11">実装の詳細</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id12">開発への参加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#id13">関連情報</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">開発ガイド</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/development-style.html">開発スタイルガイド</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id2">プロジェクト構成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id3">コーディング規約</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#python">Pythonコードスタイル</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id4">コード品質管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id5">命名規則</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id6">インポート順序</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id7">テスト戦略</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id8">テスト手法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id9">テストカバレッジ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id10">テストデータ</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id11">継続的インテグレーション</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#ci-cd">CI/CDパイプライン</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id12">コード品質メトリクス</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id13">品質管理プロセス</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id14">コミット前の確認事項</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id15">継続的インテグレーション</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id17">設定ファイル管理</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#toml">TOML設定ファイル</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id18">更新手順</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id19">ドキュメント規約</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#adr">アーキテクチャ決定記録（ADR）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id20">エラー処理とロギング</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id21">エラー設計</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id22">ロギング戦略</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id23">セキュリティ対策</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id24">入力検証</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id25">依存関係管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development-style.html#id26">パフォーマンス最適化</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id27">最適化戦略</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/development-style.html#id28">ベンチマーク</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/testing.html">テストガイド</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id2">テスト構成</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id3">1. 単体テスト</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id4">2. 結合テスト</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id5">3. パフォーマンステスト</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id6">テストの実行方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id7">テストの作成ガイドライン</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id8">1. テストケースの命名</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id9">2. テストデータの配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id10">3. フィクスチャの活用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id11">4. アサーションの書き方</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id12">テストデータの作成</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id13">1. 基本テストデータ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id14">2. エッジケース</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/testing.html#id15">3. エラーケース</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#ci-cd">CI/CDでのテスト</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id16">テストカバレッジの目標</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/testing.html#id17">トラブルシューティング</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html">1. テスト戦略</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id2">1.1 テストの目的</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id3">1.2 テストレベル</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html#id4">2. テストカテゴリ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#test-cli-py">2.1 コマンドラインテスト (<code class="docutils literal notranslate"><span class="pre">test_cli.py</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#test-converter-py">2.2 変換機能テスト (<code class="docutils literal notranslate"><span class="pre">test_converter.py</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#cdata-test-cdata-py">2.3 CDATAテスト (<code class="docutils literal notranslate"><span class="pre">test_cdata.py</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#test-performance-py">2.4 性能テスト (<code class="docutils literal notranslate"><span class="pre">test_performance.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html#id5">3. カバレッジ要件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id6">3.1 機能カバレッジ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id7">3.2 エッジケース</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html#id8">4. 性能要件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id9">4.1 処理時間</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id10">4.2 メモリ使用</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html#id11">5. テスト環境</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id12">5.1 実行環境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id13">5.2 テスト実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/test-specification.html#id14">6. 継続的改善</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id15">6.1 テスト維持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id16">6.2 自動化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/test-specification.html#id17">6.3 ドキュメント更新</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">設計決定記録</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">アーキテクチャ決定記録（ADR）</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">ADRとは</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">ADR一覧</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html">1. ADR 001: XML変換の基本設計原則</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html#id1">1.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html#context">1.2. Context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html#decision">1.3. Decision</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html#consequences">1.4. Consequences</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-002-column-name-mapping-location.html">2. ADR 002: カラム名マッピングの設定場所変更</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-002-column-name-mapping-location.html#id1">2.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-002-column-name-mapping-location.html#context">2.2. Context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-002-column-name-mapping-location.html#decision">2.3. Decision</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-002-column-name-mapping-location.html#benefits">2.4. Benefits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-002-column-name-mapping-location.html#id2">2.5. 実装例</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html">3. ADR 003: 設定ファイルの構造変更とデータ参照方式</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#id1">3.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#context">3.2. Context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#decision">3.3. Decision</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#id2">3.4. 代替案</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#consequences">3.5. Consequences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#notes">3.6. Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html#id5">3.7. 移行計画</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-004-library-selection-and-implementation.html">4. ADR 004: ライブラリ選択と実装知見</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#id1">4.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#context">4.2. Context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#decision">4.3. Decision</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#lessons-learned">4.4. Lessons Learned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#consequences">4.5. Consequences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-004-library-selection-and-implementation.html#notes">4.6. Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html">5. ADR-005: XMLパスとシート名の取り扱い</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id1">5.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id2">5.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id3">5.3. 決定事項</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id6">5.4. 結果</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id7">5.5. 影響</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id8">5.6. 注意点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html#id9">5.7. 実装完了</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html">6. ADR-006: XMLパスと警告メッセージ</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id1">6.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id2">6.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id3">6.3. 決定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id4">6.4. 結果</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id8">6.5. 実装完了</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id9">6.6. 注意点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html#id10">6.7. 関連事項</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-007-sheet-integration-strategy.html">7. ADR-007: シートデータ統合戦略</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id1">7.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id2">7.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id3">7.3. 決定事項</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id6">7.4. 結果</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id7">7.5. 影響</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id8">7.6. 注意点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-007-sheet-integration-strategy.html#id9">7.7. 実装完了</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-008-flexible-element-reference.html">8. ADR-008: 柔軟な要素参照方式</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id1">8.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id2">8.2. 背景</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id3">8.3. 決定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id4">8.4. 検討事項</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id7">8.5. 実装完了</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id8">8.6. 関連事項</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-008-flexible-element-reference.html#id9">8.7. 注意点</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-009-test-data-cleanup.html">9. ADR-009: テストデータのクリーンアップ</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id1">9.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id2">9.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id3">9.3. 決定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id4">9.4. 根拠</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id5">9.5. 影響</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id6">9.6. 実装完了</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-009-test-data-cleanup.html#id7">9.7. 注意点</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-010-documentation-tool-selection.html">10. ADR-010: ドキュメント生成ツールの選定</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id1">10.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id2">10.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id3">10.3. 決定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id6">10.4. 代替案</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id7">10.5. 影響</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-010-documentation-tool-selection.html#id10">10.6. 備考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="adr-011-documentation-structure-and-format.html">11. ADR-011: ドキュメント構造と形式の標準化</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="adr-011-documentation-structure-and-format.html#id1">11.1. ステータス</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-011-documentation-structure-and-format.html#id2">11.2. 文脈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-011-documentation-structure-and-format.html#id3">11.3. 決定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-011-documentation-structure-and-format.html#id8">11.4. 影響</a></li>
+<li class="toctree-l4"><a class="reference internal" href="adr-011-documentation-structure-and-format.html#id11">11.5. 備考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">主要な決定事項</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#xml">XML変換の基本方針</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">技術選択</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">データ処理方針</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">ドキュメント管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">ADRの管理方針</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">新規ADRの作成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">ADRの更新</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">ステータスの種類</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">xml2xlsx Developer Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">アーキテクチャ決定記録（ADR）</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/adr/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adr">
+<h1>アーキテクチャ決定記録（ADR）<a class="headerlink" href="#adr" title="Link to this heading"></a></h1>
+<p>このセクションでは、xml2xlsxの重要な設計決定とその背景を記録しています。</p>
+<section id="id1">
+<h2>ADRとは<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>ADR（Architecture Decision Record）は、プロジェクトにおける重要な設計上の決定を記録するためのドキュメントです。
+各ADRには以下の情報が含まれます：</p>
+<ul class="simple">
+<li><p>ステータス（提案、承認、却下、廃止など）</p></li>
+<li><p>決定が必要となった背景や文脈</p></li>
+<li><p>検討された選択肢</p></li>
+<li><p>決定内容とその理由</p></li>
+<li><p>影響と結果</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>ADR一覧<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="adr-001-xml-conversion-design-principles.html">1. ADR 001: XML変換の基本設計原則</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-002-column-name-mapping-location.html">2. ADR 002: カラム名マッピングの設定場所変更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-003-configuration-structure-and-data-reference.html">3. ADR 003: 設定ファイルの構造変更とデータ参照方式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-004-library-selection-and-implementation.html">4. ADR 004: ライブラリ選択と実装知見</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-005-xml-path-and-sheet-name-handling.html">5. ADR-005: XMLパスとシート名の取り扱い</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-006-full-xml-path-and-warnings.html">6. ADR-006: XMLパスと警告メッセージ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-007-sheet-integration-strategy.html">7. ADR-007: シートデータ統合戦略</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-008-flexible-element-reference.html">8. ADR-008: 柔軟な要素参照方式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-009-test-data-cleanup.html">9. ADR-009: テストデータのクリーンアップ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-010-documentation-tool-selection.html">10. ADR-010: ドキュメント生成ツールの選定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adr-011-documentation-structure-and-format.html">11. ADR-011: ドキュメント構造と形式の標準化</a></li>
+</ul>
+</div>
+</section>
+<section id="id3">
+<h2>主要な決定事項<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="xml">
+<h3>XML変換の基本方針<a class="headerlink" href="#xml" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>XML→Excel変換の基本設計（ADR-001）</p></li>
+<li><p>列名マッピングの実装方法（ADR-002）</p></li>
+<li><p>設定構造の設計（ADR-003）</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>技術選択<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>使用ライブラリの選定（ADR-004）</p></li>
+<li><p>XMLパス処理の実装（ADR-005）</p></li>
+<li><p>シート名処理の方針（ADR-005）</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>データ処理方針<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>完全パスの実装（ADR-006）</p></li>
+<li><p>シート統合戦略（ADR-007）</p></li>
+<li><p>要素参照の柔軟性（ADR-008）</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>ドキュメント管理<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>ドキュメントツールの選定（ADR-010）</p></li>
+<li><p>ドキュメント構造と形式の標準化（ADR-011）</p></li>
+</ul>
+</section>
+</section>
+<section id="id7">
+<h2>ADRの管理方針<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id8">
+<h3>新規ADRの作成<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>次のADR番号を割り当て</p></li>
+<li><p>テンプレートを基に作成</p></li>
+<li><p>レビューと承認プロセス</p></li>
+<li><p>マージと公開</p></li>
+</ol>
+</section>
+<section id="id9">
+<h3>ADRの更新<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>既存のADRは変更せず、新規ADRとして記録</p></li>
+<li><p>古いADRは「置換（Superseded）」として記録</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>ステータスの種類<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>提案（Proposed）</dt><dd><p>レビュー待ちの新規提案</p>
+</dd>
+<dt>承認（Accepted）</dt><dd><p>レビュー完了し採用された決定</p>
+</dd>
+<dt>却下（Rejected）</dt><dd><p>検討の結果、採用されなかった提案</p>
+</dd>
+<dt>廃止（Deprecated）</dt><dd><p>以前の決定で現在は無効</p>
+</dd>
+<dt>置換（Superseded）</dt><dd><p>新しい決定によって置き換えられた</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../guides/test-specification.html" class="btn btn-neutral float-left" title="1. テスト戦略" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="adr-001-xml-conversion-design-principles.html" class="btn btn-neutral float-right" title="1. ADR 001: XML変換の基本設計原則" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, hat47x.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
