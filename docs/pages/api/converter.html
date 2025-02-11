@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XML変換 &mdash; xml2xlsx ユーザーガイド</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=0a962762"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=4755f45a"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            xml2xlsx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/basic.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/config.html">設定ファイルの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/advanced.html">高度な使用方法</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">xml2xlsx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">XML変換</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/api/converter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-xml2xlsx.converter">
+<span id="xml"></span><h1>XML変換<a class="headerlink" href="#module-xml2xlsx.converter" title="Link to this heading"></a></h1>
+<p>XMLファイルをExcelファイルに変換するためのメインモジュールです。</p>
+<section id="id1">
+<h2>クラス<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="xml2xlsx.converter.XmlToExcelConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml2xlsx.converter.</span></span><span class="sig-name descname"><span class="pre">XmlToExcelConverter</span></span><a class="headerlink" href="#xml2xlsx.converter.XmlToExcelConverter" title="Link to this definition"></a></dt>
+<dd><p>XMLからExcelへの変換を行うクラスです。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xml2xlsx.converter.XmlToExcelConverter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xml2xlsx.converter.XmlToExcelConverter.__init__" title="Link to this definition"></a></dt>
+<dd><p>コンバーターを初期化します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_file</strong> (<em>str</em><em>, </em><em>optional</em>) -- 設定ファイルのパス（オプション）</p>
+</dd>
+<dt class="field-even">例外<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ConfigurationError</strong> -- 設定ファイルの読み込みに失敗した場合</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xml2xlsx.converter.XmlToExcelConverter.load_config">
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xml2xlsx.converter.XmlToExcelConverter.load_config" title="Link to this definition"></a></dt>
+<dd><p>設定ファイルを読み込みます。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_file</strong> (<em>str</em>) -- 設定ファイルのパス</p>
+</dd>
+<dt class="field-even">例外<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ConfigurationError</strong> -- 設定ファイルの読み込みや検証に失敗した場合</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xml2xlsx.converter.XmlToExcelConverter.convert">
+<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xml2xlsx.converter.XmlToExcelConverter.convert" title="Link to this definition"></a></dt>
+<dd><p>XMLファイルをExcelに変換します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> -- 入力XMLファイルのパス</p></li>
+<li><p><strong>output_file</strong> -- 出力Excelファイルのパス</p></li>
+</ul>
+</dd>
+<dt class="field-even">例外<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ConfigurationError</strong> -- 設定が不適切な場合</p></li>
+<li><p><strong>ET.ParseError</strong> -- XMLファイルの解析に失敗した場合</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="id2">
+<h2>使用例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>基本的な使用方法:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">xml2xlsx</span><span class="w"> </span><span class="kn">import</span> <span class="n">XmlToExcelConverter</span>
+
+<span class="c1"># 設定ファイルを指定して初期化</span>
+<span class="n">converter</span> <span class="o">=</span> <span class="n">XmlToExcelConverter</span><span class="p">(</span><span class="s2">&quot;config.toml&quot;</span><span class="p">)</span>
+
+<span class="c1"># XMLファイルを変換</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;input.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;output.xlsx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>設定ファイル形式<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>TOML形式の設定ファイルで、以下の構造を持ちます：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping]</span>
+<span class="s2">&quot;xml.path&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">sheet_name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Sheet1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;source&quot;</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;target&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>設定の各要素：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xml.path</span></code>: XMLのパス（ドット区切りの要素階層）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sheet_name</span></code>: 出力するExcelのシート名</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code>: ソースフィールドと出力カラム名のマッピング</p>
+<ul>
+<li><p>キー: XMLの要素名または属性名（属性は&#64;プレフィックス）</p></li>
+<li><p>値: Excelのカラム名</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id4">
+<h2>注意事項<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>シート名の制約</p>
+<ul class="simple">
+<li><p>シート名は設定ファイルで明示的に指定する必要があります</p></li>
+<li><p>名前の長さや文字種の制限はExcelの仕様に準拠します</p></li>
+</ul>
+</li>
+<li><p>データ変換</p>
+<ul class="simple">
+<li><p>すべての値は文字列として処理されます</p></li>
+<li><p>CDATA要素は適切に処理されます</p></li>
+<li><p>重複する要素は自動的に排除されます</p></li>
+</ul>
+</li>
+<li><p>メモリ管理</p>
+<ul class="simple">
+<li><p>処理済み要素は追跡され、重複処理を防止します</p></li>
+<li><p>必要なカラムのみを抽出して処理します</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

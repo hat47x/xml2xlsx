@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>設定ファイルの作成 &mdash; xml2xlsx ユーザーガイド</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=0a962762"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=4755f45a"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="高度な使用方法" href="advanced.html" />
+    <link rel="prev" title="基本的な使い方" href="basic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            xml2xlsx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="basic.html">基本的な使い方</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">設定ファイルの作成</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">設定ファイルの基本</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">基本構造</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">要素の指定方法</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">1. 属性の参照</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">2. 要素の参照</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">設定例</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">1. シンプルな変換</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">2. 複数シートの出力</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">制約事項</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">1. シート名</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">2. カラム名</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">よくある問題と解決方法</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id14">1. シート名が長すぎる場合</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">2. 要素が見つからない場合</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">次のステップ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">高度な使用方法</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">xml2xlsx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">設定ファイルの作成</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage/config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>設定ファイルの作成<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>このガイドでは、xml2xlsxの設定ファイルの詳細な作成方法を説明します。</p>
+<section id="id2">
+<h2>設定ファイルの基本<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>設定ファイルはTOML形式で記述され、以下の要素で構成されます：</p>
+<ol class="arabic simple">
+<li><p>マッピング定義</p></li>
+<li><p>シート名の指定</p></li>
+<li><p>カラム名の設定</p></li>
+</ol>
+<section id="id3">
+<h3>基本構造<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping.</span><span class="err">要素パス</span><span class="k">]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;シート名&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;XMLの要素名&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Excelのカラム名&quot;</span>
+<span class="err">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id4">
+<h2>要素の指定方法<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>1. 属性の参照<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>属性は <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> プレフィックスで指定します：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping.products.item]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品リスト&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;@id&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品ID&quot;</span><span class="err">,</span><span class="w">       </span><span class="c1"># id属性</span>
+<span class="w">    </span><span class="s2">&quot;@code&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品コード&quot;</span><span class="w">  </span><span class="c1"># code属性</span>
+<span class="err">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>2. 要素の参照<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>要素は直接名前で指定します：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping.products.item]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品リスト&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品名&quot;</span><span class="err">,</span><span class="w">    </span><span class="c1"># name要素</span>
+<span class="w">    </span><span class="s2">&quot;price&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;価格&quot;</span><span class="w">      </span><span class="c1"># price要素</span>
+<span class="err">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id7">
+<h2>設定例<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id8">
+<h3>1. シンプルな変換<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;products&gt;</span>
+<span class="w">    </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;name&gt;</span>商品A<span class="nt">&lt;/name&gt;</span>
+<span class="w">        </span><span class="nt">&lt;price&gt;</span>1000<span class="nt">&lt;/price&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/products&gt;</span>
+</pre></div>
+</div>
+<p>対応する設定：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping.products.item]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品リスト&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;@id&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品ID&quot;</span><span class="err">,</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;商品名&quot;</span><span class="err">,</span>
+<span class="w">    </span><span class="s2">&quot;price&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;価格&quot;</span>
+<span class="err">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>2. 複数シートの出力<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;company&gt;</span>
+<span class="w">    </span><span class="nt">&lt;departments&gt;</span>
+<span class="w">        </span><span class="nt">&lt;dept</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;name&gt;</span>営業部<span class="nt">&lt;/name&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/dept&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/departments&gt;</span>
+<span class="w">    </span><span class="nt">&lt;employees&gt;</span>
+<span class="w">        </span><span class="nt">&lt;employee</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;name&gt;</span>山田太郎<span class="nt">&lt;/name&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/employee&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/employees&gt;</span>
+<span class="nt">&lt;/company&gt;</span>
+</pre></div>
+</div>
+<p>対応する設定：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[mapping.company.departments.dept]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;部門一覧&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;@id&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;部門ID&quot;</span><span class="err">,</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;部門名&quot;</span>
+<span class="err">}</span>
+
+<span class="k">[mapping.company.employees.employee]</span>
+<span class="n">sheet_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;従業員一覧&quot;</span>
+<span class="n">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;@id&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;社員ID&quot;</span><span class="err">,</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;氏名&quot;</span>
+<span class="err">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id10">
+<h2>制約事項<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<section id="id11">
+<h3>1. シート名<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>31文字以内</p></li>
+<li><dl class="simple">
+<dt>使用可能文字:</dt><dd><ul>
+<li><p>英数字</p></li>
+<li><p>ひらがな</p></li>
+<li><p>カタカナ</p></li>
+<li><p>漢字</p></li>
+<li><p>一部の記号（スペース、アンダースコア等）</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="id12">
+<h3>2. カラム名<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>重複不可</p></li>
+<li><p>空白文字は使用可能</p></li>
+</ul>
+</section>
+</section>
+<section id="id13">
+<h2>よくある問題と解決方法<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<section id="id14">
+<h3>1. シート名が長すぎる場合<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>エラーメッセージ:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">シート名</span> <span class="pre">'xxxxx'</span> <span class="pre">がExcelの31文字制限を超えています</span></code></p>
+</dd>
+<dt>解決方法:</dt><dd><p>より短いシート名を設定する</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h3>2. 要素が見つからない場合<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>エラーメッセージ:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">指定された要素</span> <span class="pre">'xxxxx'</span> <span class="pre">が見つかりません</span></code></p>
+</dd>
+<dt>解決方法:</dt><dd><ul class="simple">
+<li><p>XMLファイルの構造を確認</p></li>
+<li><p>要素パスが正しいか確認</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="id16">
+<h2>次のステップ<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="advanced.html"><span class="doc">高度な使用方法</span></a> で高度なマッピング設定を学習</p></li>
+<li><p><span class="xref std std-doc">../api/index</span> でAPIリファレンスを確認</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basic.html" class="btn btn-neutral float-left" title="基本的な使い方" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advanced.html" class="btn btn-neutral float-right" title="高度な使用方法" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

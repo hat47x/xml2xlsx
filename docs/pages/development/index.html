@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>開発者ガイド &mdash; xml2xlsx ユーザーガイド</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=0a962762"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=4755f45a"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            xml2xlsx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/basic.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/config.html">設定ファイルの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/advanced.html">高度な使用方法</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">xml2xlsx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">開発者ガイド</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/development/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>開発者ガイド<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>このセクションでは、xml2xlsxの開発に参加する方向けの情報を提供します。</p>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id2">
+<h2>開発環境のセットアップ<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>リポジトリのクローン:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/hat47x/xml2xlsx.git
+<span class="nb">cd</span><span class="w"> </span>xml2xlsx
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>開発用依存パッケージのインストール:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>コード品質管理<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>以下のツールを使用してコード品質を維持します：</p>
+<ul class="simple">
+<li><p>black: コードフォーマット</p></li>
+<li><p>mypy: 型チェック</p></li>
+<li><p>pflake8: コードスタイルチェック</p></li>
+</ul>
+<p>実行方法：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># フォーマットチェック</span>
+black<span class="w"> </span>--check<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># 型チェック</span>
+mypy<span class="w"> </span>src
+
+<span class="c1"># スタイルチェック</span>
+pflake8<span class="w"> </span>src<span class="w"> </span>tests
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>テスト<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>pytestを使用してテストを実行します：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 全テストの実行</span>
+pytest
+
+<span class="c1"># カバレッジレポート付きで実行</span>
+pytest<span class="w"> </span>--cov<span class="o">=</span>xml2xlsx<span class="w"> </span>tests/
+
+<span class="c1"># 特定のテストのみ実行</span>
+pytest<span class="w"> </span>tests/test_converter.py
+</pre></div>
+</div>
+<p>既存のテストケース：</p>
+<ul class="simple">
+<li><p>test_converter.py: 基本的な変換機能のテスト</p></li>
+<li><p>test_config_generation.py: 設定ファイル生成のテスト</p></li>
+<li><p>test_cdata.py: CDATA処理のテスト</p></li>
+<li><p>test_performance.py: パフォーマンステスト</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>ドキュメント生成<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>Sphinxを使用してドキュメントを生成します：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>生成されたドキュメントは <code class="docutils literal notranslate"><span class="pre">docs/_build/html</span></code> に出力されます。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xml2xlsx ユーザーガイド &mdash; xml2xlsx ユーザーガイド</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=0a962762"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=4755f45a"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="基本的な使い方" href="usage/basic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            xml2xlsx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/basic.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/config.html">設定ファイルの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/advanced.html">高度な使用方法</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">xml2xlsx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">xml2xlsx ユーザーガイド</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="xml2xlsx">
+<h1>xml2xlsx ユーザーガイド<a class="headerlink" href="#xml2xlsx" title="Link to this heading"></a></h1>
+<section id="xmlexcel">
+<h2>XMLファイルをExcelファイルに変換するツール<a class="headerlink" href="#xmlexcel" title="Link to this heading"></a></h2>
+<p>xml2xlsxは、XMLファイルを簡単にExcelファイルに変換できるツールです。</p>
+</section>
+<section id="id1">
+<h2>クイックスタート<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>インストール:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">xml2xlsx</span>
+</pre></div>
+</div>
+</li>
+<li><p>設定ファイルの生成:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">generate</span><span class="o">-</span><span class="n">config</span> <span class="nb">input</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">o</span> <span class="n">config</span><span class="o">.</span><span class="n">toml</span>
+</pre></div>
+</div>
+</li>
+<li><p>XMLファイルの変換:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">convert</span> <span class="nb">input</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">.</span><span class="n">toml</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">xlsx</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="id2">
+<h2>目次<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/basic.html">基本的な使い方</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id2">インストール</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id3">基本的な使用手順</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id6">コマンドラインオプション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id7">実行例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id9">トラブルシューティング</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/basic.html#id10">次のステップ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage/config.html">設定ファイルの作成</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id2">設定ファイルの基本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id4">要素の指定方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id7">設定例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id10">制約事項</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id13">よくある問題と解決方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/config.html#id16">次のステップ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage/advanced.html">高度な使用方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id2">高度な設定</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id5">使用例と応用パターン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id7">パフォーマンスの最適化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id10">エラー処理とデバッグ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id13">応用テクニック</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/advanced.html#id16">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="id3">
+<h2>特徴<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>シンプルなコマンドラインインターフェース</p></li>
+<li><p>設定ファイルの自動生成機能</p></li>
+<li><p>柔軟なカラムマッピング</p></li>
+<li><p>CDATA要素のサポート</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>システム要件<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.10以上</p></li>
+<li><p>対応OS: Linux, macOS, Windows</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>サポート<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>問題が発生した場合は、以下の手順で解決を試みてください：</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="usage/basic.html"><span class="doc">基本的な使い方</span></a> の確認</p></li>
+<li><p><a class="reference internal" href="usage/config.html"><span class="doc">設定ファイルの作成</span></a> の設定例を参照</p></li>
+<li><p>GitHubのイシュートラッカーで報告</p></li>
+</ol>
+</section>
+<section id="id6">
+<h2>更新履歴<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<p>最新バージョン: 0.2.0</p>
+<ul class="simple">
+<li><p>XMLパスの完全サポート</p></li>
+<li><p>設定ファイル生成機能の改善</p></li>
+<li><p>エラーメッセージの日本語対応</p></li>
+</ul>
+</section>
+<section id="id7">
+<h2>検索<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">検索ページ</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage/basic.html" class="btn btn-neutral float-right" title="基本的な使い方" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

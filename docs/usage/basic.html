@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基本的な使い方 &mdash; xml2xlsx ユーザーガイド</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=0a962762"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=4755f45a"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="設定ファイルの作成" href="config.html" />
+    <link rel="prev" title="xml2xlsx ユーザーガイド" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            xml2xlsx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">基本ガイド</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">基本的な使い方</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">インストール</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">基本的な使用手順</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">1. 設定ファイルの生成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">2. 設定ファイルの確認</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xml">3. XMLファイルの変換</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">コマンドラインオプション</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generate-config">generate-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert">convert</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">実行例</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">シンプルなXMLファイルの変換</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">トラブルシューティング</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">次のステップ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">設定ファイルの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">高度な使用方法</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">xml2xlsx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">基本的な使い方</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage/basic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>基本的な使い方<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>このガイドでは、xml2xlsxの基本的な使用方法を説明します。</p>
+<section id="id2">
+<h2>インストール<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>pipを使用してインストール:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">xml2xlsx</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>基本的な使用手順<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>1. 設定ファイルの生成<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>最初に、XMLファイルから設定ファイルを生成します:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">generate</span><span class="o">-</span><span class="n">config</span> <span class="nb">input</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">o</span> <span class="n">config</span><span class="o">.</span><span class="n">toml</span>
+</pre></div>
+</div>
+<p>このコマンドは、XMLファイルを解析して適切な設定ファイルを生成します。</p>
+</section>
+<section id="id5">
+<h3>2. 設定ファイルの確認<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>生成された設定ファイルの内容を確認します:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">mapping</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
+<span class="n">sheet_name</span> <span class="o">=</span> <span class="s2">&quot;商品リスト&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;@id&quot;</span> <span class="o">=</span> <span class="s2">&quot;商品ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span> <span class="o">=</span> <span class="s2">&quot;商品名&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;price&quot;</span> <span class="o">=</span> <span class="s2">&quot;価格&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>必要に応じて、シート名やカラム名を編集できます。</p>
+</section>
+<section id="xml">
+<h3>3. XMLファイルの変換<a class="headerlink" href="#xml" title="Link to this heading"></a></h3>
+<p>設定ファイルを使用してXMLファイルを変換:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">convert</span> <span class="nb">input</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">.</span><span class="n">toml</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">xlsx</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id6">
+<h2>コマンドラインオプション<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="generate-config">
+<h3>generate-config<a class="headerlink" href="#generate-config" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">generate</span><span class="o">-</span><span class="n">config</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">XML_FILES</span><span class="o">...</span>
+</pre></div>
+</div>
+<dl>
+<dt>オプション:</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-o</span>, <span class="option">--output <var>FILE</var></span></kbd></dt>
+<dd><p>出力する設定ファイルのパス [必須]</p>
+</dd>
+<dt><kbd><span class="option">--help</span></kbd></dt>
+<dd><p>ヘルプメッセージを表示</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="convert">
+<h3>convert<a class="headerlink" href="#convert" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">convert</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">XML_FILE</span>
+</pre></div>
+</div>
+<dl>
+<dt>オプション:</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-c</span>, <span class="option">--config <var>FILE</var></span></kbd></dt>
+<dd><p>設定ファイルのパス [必須]</p>
+</dd>
+<dt><kbd><span class="option">-o</span>, <span class="option">--output <var>FILE</var></span></kbd></dt>
+<dd><p>出力するExcelファイルのパス [必須]</p>
+</dd>
+<dt><kbd><span class="option">--help</span></kbd></dt>
+<dd><p>ヘルプメッセージを表示</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</section>
+<section id="id7">
+<h2>実行例<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id8">
+<h3>シンプルなXMLファイルの変換<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>input.xml:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;products&gt;
+    &lt;product id=&quot;1&quot;&gt;
+        &lt;name&gt;商品A&lt;/name&gt;
+        &lt;price&gt;1000&lt;/price&gt;
+    &lt;/product&gt;
+    &lt;product id=&quot;2&quot;&gt;
+        &lt;name&gt;商品B&lt;/name&gt;
+        &lt;price&gt;2000&lt;/price&gt;
+    &lt;/product&gt;
+&lt;/products&gt;
+</pre></div>
+</div>
+<p>設定ファイル（config.toml）:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">mapping</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">product</span><span class="p">]</span>
+<span class="n">sheet_name</span> <span class="o">=</span> <span class="s2">&quot;商品リスト&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;@id&quot;</span> <span class="o">=</span> <span class="s2">&quot;商品ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span> <span class="o">=</span> <span class="s2">&quot;商品名&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;price&quot;</span> <span class="o">=</span> <span class="s2">&quot;価格&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>変換の実行:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xml2xlsx</span> <span class="n">convert</span> <span class="nb">input</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">.</span><span class="n">toml</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span><span class="o">.</span><span class="n">xlsx</span>
+</pre></div>
+</div>
+<p>この結果、以下のような形式のExcelファイルが生成されます：</p>
+</section>
+</section>
+<section id="id9">
+<h2>トラブルシューティング<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<p>よくある問題と解決方法：</p>
+<ol class="arabic simple">
+<li><p>設定ファイル生成エラー
+* XMLファイルが整形式であることを確認
+* ファイルパスが正しいことを確認</p></li>
+<li><p>変換エラー
+* 設定ファイルのパスが正しいか確認
+* XMLファイルのパスが正しいか確認
+* シート名が31文字以内か確認</p></li>
+</ol>
+</section>
+<section id="id10">
+<h2>次のステップ<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="config.html"><span class="doc">設定ファイルの作成</span></a> で設定ファイルの詳細を確認</p></li>
+<li><p><a class="reference internal" href="advanced.html"><span class="doc">高度な使用方法</span></a> で高度な使用方法を学習</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="xml2xlsx ユーザーガイド" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config.html" class="btn btn-neutral float-right" title="設定ファイルの作成" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
